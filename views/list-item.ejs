@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List Item - VShoppy</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body style="background: linear-gradient(135deg, #ff9a9e, #fad0c4);">
+    <div class="container">
+        <h1>List Item</h1>
+        <form id="item-form">
+            <label for="item-name">Item Name:</label>
+            <input type="text" id="item-name" name="item-name" required><br><br>
+            <label for="item-price">Item Price:</label>
+            <input type="text" id="item-price" name="item-price" required><br><br>
+            <label for="item-image">Image URL:</label>
+<input type="url" id="item-image" name="item-image" required><br><br>
+            <button type="submit" id="submit-btn2" action="/add" method="post" >Submit</button>
+        </form>
+    </div>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+    $(document).ready(function() {
+    $('#item-form').submit(function(event) {
+        event.preventDefault(); // Prevent form submission
+        var itemName = $('#item-name').val();
+        var itemPrice = $('#item-price').val();
+        var itemImage = $('#item-image').val(); // Get the URL of the image
+        
+        var product = {
+            name: itemName,
+            price: itemPrice,
+            image: itemImage
+        };
+        localStorage.setItem('submittedProduct', JSON.stringify(product));
+        $('#item-form')[0].reset(); // Reset form fields
+        window.location.href = '/home'; // Redirect to home page
+    });
+});
+
+    </script>
+</body>
+</html>

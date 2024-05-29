@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VShoppy</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background-color: #ffd1dc; 
+        }
+        .header {
+            background-color: #ffb6c1; 
+            text-align: center;
+            color: white;
+            margin-bottom: 20px; 
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0;
+        }
+        .cart {
+            position: relative;
+            display: inline-block;
+            font-size: 18px;
+            color: white;
+        }
+        .cartimg {
+            max-width: 30px;
+            margin-right: 5px;
+        }
+        .search-container {
+            margin-top: 10px;
+        }
+        #search-bar {
+            left: 70px;
+            width: 80%;
+        }
+        #search-input {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        .search-button {
+            top: 8px;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            background-color: #ffb6c1; /* Pink search button color */
+            color: white;
+            border-color: #ffb6c1; /* Pink search button border color */
+        }
+        .list-item-button {
+            top: 8px;
+            left: 10px;
+            background-color: #90ee90; /* Pastel green list item button color */
+            color: white;
+            border-color: #90ee90; /* Pastel green list item button border color */
+        }
+        .product {
+            background-color: #ffe4e1; /* Light coral product background color */
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .product img {
+            max-width: 100%;
+            border-radius: 10px;
+        }
+        .product h3 {
+            margin-top: 10px;
+            font-size: 18px;
+        }
+        .product p {
+            font-size: 16px;
+        }
+        .btn-primary,
+        .btn-secondary {
+            background-color: #ffb6c1; /* Pink button color */
+            border-color: #ffb6c1; /* Pink button border color */
+            color: white;
+        }
+        .btn-primary:hover,
+        .btn-secondary:hover {
+            background-color: #ff69b4; /* Hot pink button hover color */
+            border-color: #ff69b4; /* Hot pink button hover border color */
+        }
+        .sidebar {
+            background-color: #ffe4e1; /* Light coral sidebar background color */
+            border-radius: 10px;
+            padding: 20px;
+            color: black; /* Change text color to black for better readability */
+        }
+        .sidebar .head {
+            background-color: #ffb6c1; /* Pink sidebar head background color */
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 20px; /* Add margin bottom to separate sidebar head from content */
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <p class="logo">VShoppy</p>
+        <div class="cart">
+            <img class="cartimg" src="https://i.postimg.cc/HkwkjxKf/shopping-cart-vector-icon-flat-600nw-1690453492.webp">
+            <p id="count">0</p>
+        </div>
+    </div>
+    <div class="search-container">
+        <div id="search-bar" class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="Search products..." id="search-input">
+            <div class="input-group-append">
+                <button class="btn btn-primary search-button" type="button" onclick="searchProducts()">Search</button>
+                <button class="btn btn-secondary list-item-button" type="button" onclick="redirect1()">List Item</button>
+            </div>
+        </div>
+    </div>
+    <p id="featured-products">Featured Products</p>
+    <div id="product-listings"></div>
+    <div class="container">
+        <div id="root"></div>
+        <div class="sidebar">
+            <div class="head">
+                <p>My Cart</p>
+            </div>
+            <div id="cartItem">Your cart is empty</div>
+            <div>
+                <p align="center">
+                    <button id="view-cart-btn" class="btn btn-primary">Checkout</button>
+
+                </p>
+            </div>
+            
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var submittedProduct = localStorage.getItem('submittedProduct');
+            if (submittedProduct) {
+                var product = JSON.parse(submittedProduct);
+                var featuredProductHTML = `
+                    <div class="product">
+                        <p style='font-size:12px;'>${product.name}</p>
+                        <h2 style='font-size: 12px;'>Rs.${product.price}</h2>
+                        <img src="${product.image}" alt="${product.name}">
+                        <button onclick="addtocart(${products.length})" class="btn btn-primary">Add to cart</button>
+                    </div>
+                `;
+                $('#featured-products').after(featuredProductHTML); // Append after "Featured Products"
+                localStorage.removeItem('submittedProduct');
+            }
+        });
+
+        const products = [
+            { id: 1, name: 'Kettle', price: 300, imageUrl: 'https://i.postimg.cc/65TZ7dLF/k1.jpg' },
+            { id: 2, name: 'Notebooks', price: 50, imageUrl: 'https://i.postimg.cc/1z0VxMsV/71o7-Xty-LMg-L.jpg' },
+            { id: 3, name: 'Mattress', price: 2000, imageUrl: 'https://i.postimg.cc/G2qBt2Bc/56101508-SD05922-01-803x602.jpg' },
+            { id: 4, name: 'Cycle', price: 4000, imageUrl: 'https://i.postimg.cc/xTkkj992/cycle.jpg' },
+            { id: 5, name: 'Umbrella', price: 600, imageUrl: 'https://i.postimg.cc/8k4dfk8f/Umbrella.jpg' },
+            { id: 6, name: 'Calculator', price: 400, imageUrl: 'https://i.postimg.cc/MGJfrg28/calci.jpg' },
+        ];
+        
+        var cart = [];
+
+        function addtocart(a){
+            cart.push({...products[a]});
+            displaycart();
+        }
+
+        function delElement(a) {
+            cart.splice(a, 1);
+            displaycart();
+        }
+
+        function displaycart() {
+            let total = 0;
+            let countElement = document.getElementById("count");
+            let cartItemElement = document.getElementById("cartItem");
+
+            if (countElement && cartItemElement) {
+                countElement.innerHTML = cart.length;
+
+                if (cart.length === 0) {
+                    cartItemElement.innerHTML = "Your cart is empty";
+                } else {
+                    cartItemElement.innerHTML = cart.map((item, index) => {
+                        total += item.price;
+                        return (
+                            `<div class='cart-item'>
+                                <div class='row-img'>
+                                    <img class='rowimg' src=${item.imageUrl}>
+                                </div>
+                                <p style='font-size:12px;'>${item.name}</p>
+                                <h2 style='font-size: 15px;'>Rs. ${item.price}.00</h2>
+                                <button class="btn btn-danger" onclick='delElement(${index})'>Remove</button>
+                            </div>`
+                        );
+                    }).join('');
+                }
+            } else {
+                console.error("One or more required elements not found.");
+            }
+        }
+
+        function displayProducts() {
+            const productListings = document.getElementById('product-listings');
+            productListings.innerHTML = '';
+            products.forEach((product, index) => {
+                const productElement = document.createElement('div');
+                productElement.classList.add('product');
+                productElement.innerHTML = `
+                    <img src="${product.imageUrl}" alt="${product.name}">
+                    <h3>${product.name}</h3>
+                    <p>Rs. ${product.price}</p>
+                    <button onclick='addtocart(${index})' class="btn btn-primary">Add to cart</button>
+                `;
+                productListings.appendChild(productElement);
+            });
+        }
+
+        function searchProducts() {
+            const searchInput = document.getElementById('search-input').value.toLowerCase();
+            const filteredProducts = products.filter(product =>
+            product.name.toLowerCase().includes(searchInput));
+            displayProducts(filteredProducts);
+        }
+
+        window.onload = function () {
+            displayProducts();
+            displaycart();
+        };
+
+        function redirect1(){
+            window.location.href="/list-item";
+        }
+
+        document.getElementById('view-cart-btn').addEventListener('click', function() {
+            // Redirect to the checkout page
+            window.location.href = '/checkout';
+        });
+
+        function displayProducts(productsToShow) {
+        const productListings = document.getElementById('product-listings');
+        productListings.innerHTML = '';
+        productsToShow.forEach((product, index) => {
+            const productElement = document.createElement('div');
+            productElement.classList.add('product');
+            productElement.innerHTML = `
+                <img src="${product.imageUrl}" alt="${product.name}">
+                <h3>${product.name}</h3>
+                <p>Rs. ${product.price.toFixed(2)}</p>
+                <button onclick='addtocart(${index})'>Add to cart</button>`;
+            productListings.appendChild(productElement);
+        });
+    }
+    
+    function searchProducts() {
+        const searchInput = document.getElementById('search-input').value.toLowerCase();
+        const filteredProducts = products.filter(product =>
+            product.name.toLowerCase().includes(searchInput));
+        displayProducts(filteredProducts);
+    }
+    
+    window.onload = function () {
+        displayProducts(products);
+        displaycart();
+    };
+
+    
+    
+
+    </script>
+</body>
+</html>
+
+

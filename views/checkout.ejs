@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="paymentApp">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payment Page</title>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #ffe4e6; /* Lighter pink background */
+    }
+
+    .container {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #fff; /* White background */
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .container::before {
+        content: "";
+        position: absolute;
+        top: -20px;
+        left: -20px;
+        width: 40px;
+        height: 40px;
+        background-color: #ffafbd; /* Lighter pink circle */
+        border-radius: 50%;
+    }
+
+    .container::after {
+        content: "";
+        position: absolute;
+        bottom: -20px;
+        right: -20px;
+        width: 40px;
+        height: 40px;
+        background-color: #ffafbd; /* Lighter pink circle */
+        border-radius: 50%;
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #7b113a;
+    }
+
+    label {
+        font-weight: bold;
+        color: #7b113a;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    select {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+
+    .payment-method {
+        margin-bottom: 20px;
+    }
+
+    .payment-method label {
+        display: block;
+    }
+
+    .payment-method select {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-sizing: border-box;
+        background-color: #fff; /* White background */
+        color: #7b113a;
+    }
+
+    .submit-btn {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 5px;
+        background-color: #7b113a; /* Dark pink button */
+        color: #fff;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .submit-btn:hover {
+        background-color: #9d2f50; /* Lighter pink on hover */
+    }
+
+    .error {
+        color: red;
+        font-size: 12px;
+        margin-top: 5px;
+    }
+
+</style>
+</head>
+<body>
+    <div class="container" ng-controller="PaymentController as paymentCtrl">
+        <h1>Payment Details</h1>
+        <form id="paymentForm" name="paymentForm" ng-submit="submitForm()" novalidate>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" ng-model="paymentCtrl.formData.name" required>
+            <span class="error" ng-show="paymentForm.name.$error.required && paymentForm.name.$dirty">Name is required</span><br>
+
+            <label for="phone">Contact Number:</label>
+            <input type="text" id="phone" name="phone" ng-model="paymentCtrl.formData.phone" pattern="[0-9]{10}" required>
+            <span class="error" ng-show="paymentForm.phone.$error.required && paymentForm.phone.$dirty">Contact number is required</span>
+            <span class="error" ng-show="paymentForm.phone.$error.pattern && paymentForm.phone.$dirty">Please enter a valid 10-digit phone number</span><br>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" ng-model="paymentCtrl.formData.email" required>
+            <span class="error" ng-show="paymentForm.email.$error.required && paymentForm.email.$dirty">Email is required</span>
+            <span class="error" ng-show="paymentForm.email.$error.email && paymentForm.email.$dirty">Please enter a valid email address</span><br>
+
+            <div class="payment-method">
+                <label for="mode">Mode of Payment:</label>
+                <select id="mode" name="mode" ng-model="paymentCtrl.formData.mode" ng-change="paymentCtrl.showUPI()" required>
+                    <option value="">Select mode of payment</option>
+                    <option value="cod">Cash on Delivery</option>
+                    <option value="upi">UPI</option>
+                </select>
+                <span class="error" ng-show="paymentForm.mode.$error.required && paymentForm.mode.$dirty">Please select a mode of payment</span>
+            </div>
+
+            <div id="upiId" ng-show="paymentCtrl.showUpiField">
+                <label for="upi">UPI ID:</label>
+                <input type="text" id="upi" name="upi" ng-model="paymentCtrl.formData.upi" ng-required="paymentCtrl.showUpiField">
+                <span class="error" ng-show="paymentForm.upi.$error.required && paymentForm.upi.$dirty">UPI ID is required</span>
+            </div>
+
+            <input type="submit" class="submit-btn" value="Place Order" >
+        </form>
+    </div>
+
+    <script>
+        angular.module('paymentApp', [])
+        .controller('PaymentController', function() {
+            var vm = this;
+            vm.formData = {};
+            vm.showUpiField = false;
+
+            vm.showUPI = function() {
+                vm.showUpiField = (vm.formData.mode === 'upi');
+            }
+        });
+
+            document.getElementById("paymentForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent default form submission
+            alert("Your order has been placed!"); // Alert message
+            // If you want to submit the form after showing the alert, you can uncomment the line below
+            // this.submit(); 
+        });
+    </script>
+</body>
+</html>
+
+
+

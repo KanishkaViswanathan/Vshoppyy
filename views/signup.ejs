@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="lstyle.css">
+    <title>Vshoppy | Sign Up</title>
+    <style>
+        /* Your existing CSS styles */
+        .input-box label {
+            font-size: 13px; /* Adjust font size */
+            margin-bottom: 3px; /* Adjust margin */
+        }
+        .input-field {
+            width: calc(100% - 20px);
+            padding: 3px 5px; /* Adjust padding vertically and horizontally */
+            margin: 2px 0;
+            border: 1px solid #ccc;
+            border-radius: 2px;
+            font-size: 14px; /* Adjust font size */
+            height: 40px; /* Adjust height */
+        }
+        .submit {
+            width: 100px;
+            padding: 6px; /* Adjust padding */
+            font-size: 12px;
+        }
+        .form-container {
+            width: 300px; /* Adjust width of the form container */
+            margin: 0 auto; /* Center the form container */
+        }
+        .top {
+            text-align: center; /* Center the header */
+            margin-bottom: 10px; /* Add some space below the header */
+        }
+        header {
+            font-size: 25px; /* Adjust font size of the header */
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+</head>
+<body ng-app="signupApp">
+    <div class="wrapper">
+        <nav class="nav">
+            <div class="nav-logo">
+                <p>Vshoppy</p>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <ul>
+                    <li><a href="#" class="link active">Home</a></li>
+                    <li><a href="#" class="link" onclick="scrollToAbout()">About</a></li>
+                    <li><a href="#" class="link" onclick="scrollToSection('contact')">Contact US</a></li>
+                </ul>
+            </div>
+            <div class="nav-button">
+                <button class="btn white-btn"  method="post" action="/login" >Back to Login</button>
+            </div>
+            <div class="nav-menu-btn">
+                <i class="bx bx-menu" onclick="myMenuFunction()"></i>
+            </div>
+        </nav>
+        
+        <div class="form-container" ng-controller="SignupController">
+            <div class="top">
+                <header>Sign Up</header>
+            </div>
+            <form id="signupForm" name="signupForm" method="post" action="/signup">
+                <div class="input-box">
+                    <label for="registrationNumber">Registration Number</label>
+                    <input type="text" name="reg" id="reg" class="input-field">
+                </div>
+                <div class="input-box">
+                    <label for="signupName">Your Name</label>
+                    <input type="text" name="uname" id="uname" class="input-field" >
+                    </span>
+                </div>
+                <div class="input-box">
+                    <label for="signupEmail">VIT Mail ID</label>
+                    <input type="email" name="email" id="email" class="input-field">
+                </div>
+                <div class="input-box">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" name="password" id="password" class="input-field" >
+                    
+                </div>
+                <div class="input-box">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" name="cpassword" id="cpassword" class="input-field" >
+                    
+                </div>
+                
+                <div class="input-box">
+                    <p align="center">
+                        <input type="submit" class="submit" value="Sign Up">
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+    function redirect(){
+        window.location.href="login.ejs"; }
+    </script>
+    
+    </body>
+    </html>    

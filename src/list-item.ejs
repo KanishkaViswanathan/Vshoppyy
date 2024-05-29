@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List Item - VShoppy</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body style="background: linear-gradient(135deg, #ff9a9e, #fad0c4);">
+    <div class="container">
+        <h1>List Item</h1>
+        <form id="item-form">
+            <label for="item-name">Item Name:</label>
+            <input type="text" id="item-name" name="item-name" required><br><br>
+            <label for="item-price">Item Price:</label>
+            <input type="text" id="item-price" name="item-price" required><br><br>
+            <label for="item-image">Upload Image:</label>
+            <input type="file" id="item-image" name="item-image" accept="image/*"><br><br>
+            <button type="submit" id="submit-btn2">Submit</button>
+        </form>
+    </div>
+
+    <!-- Other HTML content (header, search, featured products, product listings, cart) goes here -->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        const products = [
+            { id: 1, name: 'Kettle', price: 300, imageUrl: './kettle.jpg' },
+            { id: 2, name: 'Notebooks', price: 50, imageUrl: './71o7XtyLMgL.jpg' },
+            { id: 3, name: 'Mattress', price: 2000, imageUrl: './56101508SD05922_01_803x602.jpg' },
+            { id: 4, name: 'Cycle', price: 4000, imageUrl: './cycle.jpg' },
+            { id: 5, name: 'Umbrella', price: 600, imageUrl: './Umbrella.jpg' },
+            { id: 6, name: 'Calculator', price: 400, imageUrl: './calci.jpg' },
+           ];
+           const categories = [...new Set(products.map((item)=>
+            {return item}))]
+            let i=0;
+           document.getElementById('root').innerHTML = categories.map((item)=>
+           {
+           
+           }).join('')
+           var cart =[];
+           function addtocart(a){
+            cart.push({...categories[a]});
+            displaycart();
+           }
+           function delElement(a) {
+            cart.splice(a, 1);
+            displaycart();
+           }
+           function displaycart() {
+            let total = 0;
+            let countElement = document.getElementById("count");
+            let cartItemElement = document.getElementById("cartItem");
+            let totalElement = document.getElementById("total");
+           
+            if (countElement && cartItemElement && totalElement) {
+            countElement.innerHTML = cart.length;
+           
+            if (cart.length === 0) {
+            cartItemElement.innerHTML = "Your cart is empty";
+            totalElement.innerHTML = "Rs. " + 0 + ".00";
+            } else {
+            cartItemElement.innerHTML = cart.map((item, index) => {
+            total += item.price;
+            return (
+            `<div class='cart-item'>
+            <div class='row-img'>
+            <img class='rowimg' src=${item.imageUrl}>
+            </div>
+            <p style='font-size:12px;'>${item.name}</p>
+            <h2 style='font-size: 15px;'>Rs. ${item.price}.00</h2>
+            <i class='fa-solid fa-trash' onclick='delElement(${index})'></i>
+            </div>`
+            );
+            }).join('');
+           
+            totalElement.innerHTML = "Rs. " + total + ".00";
+            }
+            } else {
+            console.error("One or more required elements not found.");
+            }
+           }
+           
+           function displayProducts() {
+            const productListings = document.getElementById('product-listings');
+            productListings.innerHTML = '';
+            products.forEach((product, index) => {
+            const productElement = document.createElement('div');
+            productElement.classList.add('product');
+            productElement.innerHTML = `
+            <img src="${product.imageUrl}" alt="${product.name}">
+            <h3>${product.name}</h3>
+            <p>Rs. ${product.price}</p>
+            <button onclick='addtocart(${index})'>Add to cart</button>
+            `;
+            productListings.appendChild(productElement);
+            });
+           }
+           function searchProducts() {
+            const searchInput = document.getElementById('search-input').value.toLowerCase();
+            const filteredProducts = products.filter(product =>
+           product.name.toLowerCase().includes(searchInput));
+            displayProducts(filteredProducts);
+           }
+           window.onload = function () {
+            displayProducts();
+            displaycart();
+           };
+           $(document).ready(function() {
+            $('#list-item-button').click(function() {
+            window.location.href = 'list-item.html';
+            });
+            
+            });
+        
+           $(document).ready(function() {
+            $('#item-form').submit(function() {
+            var itemName = $('#item-name').val();
+            var itemPrice = $('#item-price').val();
+            var itemImage = $('#item-image').val();
+           
+            var product = {
+            name: itemName,
+            price: itemPrice,
+            image: itemImage
+            };
+            localStorage.setItem('submittedProduct', JSON.stringify(product));
+            $('#item-form')[0].reset();
+            window.location.href = 'home.html';
+            });
+           });
+           $(document).ready(function() {
+            var submittedProduct = localStorage.getItem('submittedProduct');
+            if (submittedProduct) {
+           
+            var product = JSON.parse(submittedProduct);
+            var featuredProductHTML = `
+            <div class="product">
+            <h3>${product.name}</h3>
+            <p>Price: Rs. ${product.price}</p>
+            <img src="${product.image}" alt="${product.name}">
+            </div>
+            `;
+            $('#featured-product').html(featuredProductHTML);
+            localStorage.removeItem('submittedProduct');
+            }
+           });
+        
+        
+           
+        
+           $(document).ready(function() {
+            $('#submit-btn2').click(function() {
+                const itemName = $('#item-name').val();
+                const itemPrice = $('#item-price').val();
+                const itemImage = $('#item-image').val();
+        
+                // Send POST request to backend to add the product
+                $.ajax({
+                    url: 'http://localhost:3001/products', // Assuming your backend is running on port 3001
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        name: itemName,
+                        price: itemPrice,
+                        imageUrl: itemImage
+                    }),
+                    success: function(response) {
+                        console.log(response);
+                        alert('Product added successfully!');
+                        // After adding the product, fetch and display all products
+                        fetchProducts();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                        alert('Failed to add product. Please try again.');
+                    }
+                });
+            });
+        
+            // Function to fetch and display all products
+            function fetchProducts() {
+                $.get('http://localhost:3001/products', function(products) {
+                    // Clear existing products from HTML
+                    $('#products-list').empty();
+                    // Loop through fetched products and append them to HTML
+                    products.forEach(function(product) {
+                        $('#products-list').append(`
+                            <div class="product">
+                                <img src="${product.imageUrl}" alt="${product.name}">
+                                <h3>${product.name}</h3>
+                                <p>Rs. ${product.price}</p>
+                            </div>
+                        `);
+                    });
+                });
+            }
+        
+            // Initial fetch of products when the page loads
+            fetchProducts();
+        });</script>
+</body>
+</html>
